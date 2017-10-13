@@ -26,11 +26,15 @@ def create_projects_array():
             if project.get('namespace').get('name') == 'London':
                 array_of_project_ids.append(project.get('id'))
 
-        print array_of_project_ids
         return array_of_project_ids
 
     except URLError, e:
         print 'No Projects found', e
 
 
-create_projects_array()
+def get_total_commits():
+    projects = create_projects_array()
+    print projects
+
+
+get_total_commits()
