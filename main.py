@@ -12,13 +12,13 @@ load_dotenv(dotenv_path)
 API_PRIVATE_TOKEN = os.environ.get('GITLAB_PRIVATE_TOKEN')
 API_KEY_QUERY = '&private_token=' + API_PRIVATE_TOKEN
 API_BASE_URL = 'https://gitlab.havaslynx.com/api/v4'
-ALL_PROJECTS = Request(API_BASE_URL + '/projects?per_page=1000' + API_KEY_QUERY)
 
 
 def create_projects_array():
+    all_projects = Request(API_BASE_URL + '/projects?per_page=1000' + API_KEY_QUERY)
     array_of_project_ids = []
     try:
-        response = urlopen(ALL_PROJECTS)
+        response = urlopen(all_projects)
         projects = json.loads(response.read())
 
         for project in projects:
