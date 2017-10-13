@@ -8,6 +8,6 @@ setup(name='Gitlab Scraper',
       author_email='blackmanrgh@gmail.com',
       license='MIT',
       install_requires=[
-          'simplejson', 'dotenv'
+          'simplejson', 'python-dotenv'
       ],
       zip_safe=False)

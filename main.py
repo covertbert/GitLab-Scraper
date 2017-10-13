@@ -1,15 +1,16 @@
 from urllib2 import Request, urlopen, URLError
 import simplejson as json
-from os.path import join, dirname
+import os
 from dotenv import load_dotenv
 
-DOTENV_PATH = join(dirname(__file__), '.env')
-
+# Global Constants
 API_PRIVATE_TOKEN = os.environ.get('GITLAB_PRIVATE_TOKEN')
 API_KEY_QUERY = '?private_token='
 API_BASE_URL = 'https://gitlab.havaslynx.com/api/v4/'
 
-load_dotenv(DOTENV_PATH)
+# Dotenv loading
+dotenv_path = '.env'
+load_dotenv(dotenv_path)
 
 all_projects_request = Request(API_BASE_URL + '/projects' + API_KEY_QUERY)
 array_of_project_ids = []
