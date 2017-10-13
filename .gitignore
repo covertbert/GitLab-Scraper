@@ -1,0 +1,4 @@
+.env
+build
+dist
+Gitlab_Scraper.egg-info
