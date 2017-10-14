@@ -35,6 +35,7 @@ def create_projects_array():
             if project.get('namespace').get('name') == 'London':
                 array_of_project_ids.append(project.get('id'))
 
+        print 'There are %s projects in the London namespace' % len(array_of_project_ids)
         return array_of_project_ids
 
     except URLError, e:
@@ -53,10 +54,13 @@ def get_total_commits():
             commits = json.loads(response.read())
 
             for commit in commits:
-                print commit
+                commits_array.append(commit)
 
         except URLError, e:
             print 'No Commits found', e
+
+    print 'Each project has an average of %s commits on the master branch' % (len(commits_array) / len(project_ids))
+    print 'There is a total of %s commits on all master branches across the London namespace' % len(commits_array)
 
 
 get_total_commits()
