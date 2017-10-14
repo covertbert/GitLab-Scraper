@@ -1,5 +1,6 @@
 import simplejson as json
 import os
+
 from urllib2 import Request, urlopen, URLError
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -8,14 +9,22 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-# Global Constants
-API_PRIVATE_TOKEN = os.environ.get('GITLAB_PRIVATE_TOKEN')
-API_KEY_QUERY = '&private_token=' + API_PRIVATE_TOKEN
-API_BASE_URL = 'https://gitlab.havaslynx.com/api/v4'
+
+def api_request(api_segment, other_queries):
+    api_private_token = os.environ.get('GITLAB_PRIVATE_TOKEN')
+    api_key = '?private_token=' + api_private_token
+    api_base_url = 'https://gitlab.havaslynx.com/api/v4'
+
+    if other_queries:
+        request = api_base_url + api_segment + api_key + other_queries
+    else:
+        request = api_base_url + api_segment + api_key
+
+    return Request(request)
 
 
 def create_projects_array():
-    all_projects = Request(API_BASE_URL + '/projects?per_page=1000' + API_KEY_QUERY)
+    all_projects = api_request('/projects', '&per_page=1000')
     array_of_project_ids = []
     try:
         response = urlopen(all_projects)
@@ -33,8 +42,21 @@ def create_projects_array():
 
 
 def get_total_commits():
-    projects = create_projects_array()
-    print projects
+    project_ids = create_projects_array()
+    commits_array = []
+
+    for project_id in project_ids:
+        project_commits = api_request('/projects/' + str(project_id) + '/repository/commits', False)
+
+        try:
+            response = urlopen(project_commits)
+            commits = json.loads(response.read())
+
+            for commit in commits:
+                print commit
+
+        except URLError, e:
+            print 'No Commits found', e
 
 
 get_total_commits()
