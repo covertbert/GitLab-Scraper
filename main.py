@@ -35,7 +35,7 @@ def api_request(api_segment, other_queries):
 
 def create_projects_array():
     # Sets function scoped variables
-    all_projects = api_request('/projects', '&per_page=1000')
+    all_projects = api_request('/projects', '&per_page=10000')
     array_of_project_ids = []
 
     for project in all_projects:
@@ -52,16 +52,24 @@ def get_total_commits():
     project_ids = create_projects_array()
     commits_array = []
 
-    # Loops through array of project IDs and gets each project's commits
+    # Loops through array of project IDs and gets each project's master branch commits
     for project_id in project_ids:
-        project_commits = api_request('/projects/' + str(project_id) + '/repository/commits', False)
+        project_commits = api_request('/projects/' + str(project_id) + '/repository/commits', '&ref_name=master')
 
         # Loops through the array of current project's commits and pushes them to global commits array
         for commit in project_commits:
             commits_array.append(commit)
 
-    print 'Each project has an average of %s commits on the master branch' % (len(commits_array) / len(project_ids))
-    print 'There is a total of %s commits on all master branches across the London namespace' % len(commits_array)
+    # Loops through array of project IDs and gets each project's master branch commits
+    for project_id in project_ids:
+        project_commits = api_request('/projects/' + str(project_id) + '/repository/commits', '&ref_name=develop')
+
+        # Loops through the array of current project's commits and pushes them to global commits array
+        for commit in project_commits:
+            commits_array.append(commit)
+
+    print 'Each project has an average of %s commits' % (len(commits_array) / len(project_ids))
+    print 'There is a total of %s commits' % len(commits_array)
 
 
 get_total_commits()
